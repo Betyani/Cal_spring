@@ -4,4 +4,5 @@ import com.cal.dto.ProductDto;
 
 public interface ProductMapper {
 	public void productRegister(ProductDto dto);
+	public void productDelete(int id);
 }

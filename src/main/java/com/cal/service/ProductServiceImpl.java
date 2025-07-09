@@ -12,11 +12,16 @@ import lombok.extern.log4j.Log4j;
 @AllArgsConstructor
 @Service
 public class ProductServiceImpl implements ProductService {
-	
+
 	private ProductMapper mapper;
-	
+
 	@Override
 	public void productRegister(ProductDto dto) {
 		mapper.productRegister(dto);
 	};
+
+	@Override
+	public void productDelete(int id) {
+		mapper.productDelete(id);
+	}
 }

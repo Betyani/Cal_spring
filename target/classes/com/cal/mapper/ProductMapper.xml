@@ -3,7 +3,13 @@
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cal.mapper.ProductMapper">
-	<insert id = "productRegister">
-		insert into products (name, price, category) values (#{name}, #{price}, #{category}) 
+	<insert id="productRegister">
+		insert into products (name, price, category) values
+		(#{name}, #{price}, #{category})
 	</insert>
+
+	<delete id="productDelete">
+		DELETE FROM products
+		WHERE id=#{id}
+	</delete>
 </mapper>
