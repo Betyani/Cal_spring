@@ -15,7 +15,7 @@
 <P>  The time on the server is ${serverTime}. </P>
 
 
-
+<!-- 깃허브 토큰 테스트 용도 -->
 
 </body>
 </html>
