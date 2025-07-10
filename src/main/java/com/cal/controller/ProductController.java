@@ -1,10 +1,22 @@
 package com.cal.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+<<<<<<< HEAD
+=======
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+>>>>>>> branch 'master' of git@github.com:Betyani/Cal_spring.git
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cal.dto.ListDto;
 import com.cal.dto.ProductDto;
 import com.cal.service.ProductService;
 
@@ -32,4 +44,45 @@ public class ProductController {
 		service.productDelete(id);
 		log.info("삭제된 상품 ID: " + id);
 	};
+
+    // 내가 정한 상품 상세히 조회가능 
+@GetMapping("/{id}")
+public ProductDto getProduct(@PathVariable int id) {
+return service.getProductById(id);
+}
+// 상품 목록 조회 및 검색
+@GetMapping
+public Map<String, Object> searchProducts(
+@RequestParam(required = false) String keyword,
+@RequestParam(required = false) String category,
+@RequestParam(defaultValue = "new") String sort,
+@RequestParam(defaultValue = "1") int page,
+@RequestParam(defaultValue = "8") int size) {
+
+ListDto criteria = new ListDto();
+criteria.setKeyword(keyword);
+criteria.setCategory(category);
+criteria.setSort(sort);
+criteria.setPage(page);
+criteria.setSize(size);
+
+List<ProductDto> products = service.getProductsByCriteria(criteria);
+int total = service.getProductCount(criteria);
+
+Map<String, Object> result = new HashMap<>();
+result.put("products", products);
+result.put("total", total);
+result.put("page", page);
+result.put("size", size);
+return result;
+}
+@PostMapping
+public void insertProduct(@RequestBody ProductDto product) {
+service.insertProduct(product);
+}
+
+
+	
+	
+	
 }

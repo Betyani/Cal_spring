@@ -1,8 +1,16 @@
 package com.cal.mapper;
+import java.util.List;
 
+import com.cal.dto.ListDto;
 import com.cal.dto.ProductDto;
 
 public interface ProductMapper {
 	public void productRegister(ProductDto dto);
 	public void productDelete(int id);
+    List<ProductDto> findAll();
+    ProductDto findById(int id);
+    List<ProductDto> findWithCriteria(ListDto criteria);
+    int getProductCount(ListDto criteria);
+    void insertProduct(ProductDto product);
+	int countWithCriteria(ListDto criteria);
 }

@@ -1,40 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
-<log4j:configuration
-	xmlns:log4j="http://jakarta.apache.org/log4j/">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
 	<!-- Appenders -->
-	<appender name="console"
-		class="org.apache.log4j.ConsoleAppender">
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
 		<param name="Target" value="System.out" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%-5p: %c - %m%n" />
 		</layout>
 	</appender>
-
+	
 	<!-- Application Loggers -->
 	<logger name="com.cal.spring">
 		<level value="info" />
 	</logger>
-	<logger name="com.cal">
-		<level value="info" />
-	</logger>
-	<!-- 혹시 오류시, 위의 com.cal.spring처럼 정확하게 명시를 해봅시다 :)  -->
-
-	<!-- TestController 컨트롤러 때문에 추가함 -->
-	<logger name="com.cal.controller">
-		<level value="info" />
-	</logger>
-
+	
+	<!--	TestController 컨트롤러 때문에 추가함 -->				
+	<logger name="com.cal.controller">					
+		<level value="info" />				
+	</logger>					
+	
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">
 		<level value="info" />
 	</logger>
-
+	
 	<logger name="org.springframework.beans">
 		<level value="info" />
 	</logger>
-
+	
 	<logger name="org.springframework.context">
 		<level value="info" />
 	</logger>
@@ -52,12 +46,12 @@
 	</logger>
 	<logger name="jdbc.connection">
 		<level value="warn" />
-	</logger>
+	</logger>	
 
 	<!-- Root Logger -->
 	<root>
 		<priority value="warn" />
 		<appender-ref ref="console" />
 	</root>
-
+	
 </log4j:configuration>
