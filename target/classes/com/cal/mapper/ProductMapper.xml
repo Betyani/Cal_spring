@@ -12,4 +12,62 @@
 		DELETE FROM products
 		WHERE id=#{id}
 	</delete>
+	
+	
+	<select id="findAll" resultType="com.cal.dto.ProductDto">
+		SELECT * FROM products ORDER BY id DESC
+	</select>
+
+	<select id="findById" parameterType="int"
+		resultType="com.cal.dto.ProductDto">
+		SELECT * FROM products WHERE id = #{id}
+	</select>
+
+	<select id="findWithCriteria"
+		resultType="com.cal.dto.ProductDto"
+		parameterType="com.cal.dto.ListDto">
+
+		SELECT * FROM products
+		<where>
+			<if test="keyword != null and keyword != ''">
+				name LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="category != null and category != ''">
+				AND category = #{category}
+			</if>
+		</where>
+		<choose>
+			<when test="sort == 'old'">                       <!-- sort 종류 코드임 안하고 싶으면 지우면되는거 밑도 -->
+				ORDER BY id ASC
+			</when>
+			<when test="sort == 'recommend'">
+				ORDER BY id DESC
+			</when>
+			<otherwise>
+				ORDER BY id DESC
+			</otherwise>
+		</choose>
+		LIMIT #{size} OFFSET #{offset}
+	</select>
+
+	<select id="countWithCriteria" resultType="int"
+		parameterType="com.cal.dto.ListDto">
+		SELECT COUNT(*) FROM products
+		<where>
+			<if test="keyword != null and keyword != ''">
+				name LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="category != null and category != ''">
+				AND category = #{category}
+			</if>
+		</where>
+	</select>
+	<insert id="insertProduct" parameterType="com.cal.dto.ProductDto">
+		INSERT INTO products (name, price, category, image_url, keyword)
+		VALUES (#{name}, #{price}, #{category}, #{imageUrl}, #{keyword})
+	</insert>
+
+	
+	
+	
 </mapper>
