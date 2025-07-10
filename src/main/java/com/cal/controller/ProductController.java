@@ -19,6 +19,7 @@ public class ProductController {
 
 	private ProductService service;
 
+	//테스트용 주석
 //	상품 등록(React에서 받아온 json 데이터를 dto에 저장) 
 	@RequestMapping("/register")
 	public void productRegister(@RequestBody ProductDto dto) {
