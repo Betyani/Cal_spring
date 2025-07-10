@@ -9,11 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-<<<<<<< HEAD
-=======
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
->>>>>>> branch 'master' of git@github.com:Betyani/Cal_spring.git
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cal.dto.ListDto;
