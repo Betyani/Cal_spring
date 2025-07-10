@@ -1,9 +1,9 @@
 package com.cal.controller;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cal.dto.ProductDto;
@@ -27,8 +27,8 @@ public class ProductController {
 		log.info("받아온 상품: " + dto);
 	};
 
-	@RequestMapping("/delete") //(value = "/delete/{id}", method = RequestMethod.DELETE) 강사님이 RestController인 이거 쓰면 멋져보인다고 추천해주셨어요.
-	public void productDelete(@PathVariable int id) {	//(@RequestBody ProductDto dto)
+	@DeleteMapping("/delete/{id}")
+	public void productDelete(@PathVariable int id) {
 		service.productDelete(id);
 		log.info("삭제된 상품 ID: " + id);
 	};

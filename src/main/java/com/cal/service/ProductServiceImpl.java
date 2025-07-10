@@ -22,6 +22,8 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public void productDelete(int id) {
-		mapper.productDelete(id);
+		log.info(id);
+		int n = mapper.productDelete(id);
+		log.info(n);
 	}
 }
