@@ -25,11 +25,8 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public void productDelete(int id) {
-		log.info(id);
-		int n = mapper.productDelete(id);
-		log.info(n);
+		mapper.productDelete(id);
 	}
-
 	@Override
 	public ProductDto getProductById(int id) {
 		return mapper.findById(id);
@@ -54,7 +51,8 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public void insertProduct(ProductDto product) {
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
+	
 }
