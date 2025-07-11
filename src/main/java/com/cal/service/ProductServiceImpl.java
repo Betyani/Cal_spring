@@ -48,11 +48,7 @@ public class ProductServiceImpl implements ProductService {
 		return null;
 	}
 
-	@Override
-	public void insertProduct(ProductDto product) {
-		// TODO Auto-generated method stub
-		
+
 	}
 	
 	
-}

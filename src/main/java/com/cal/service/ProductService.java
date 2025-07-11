@@ -18,5 +18,5 @@ public interface ProductService {
 
 	int getProductCount(ListDto criteria);
 
-	void insertProduct(ProductDto product);
+
 }
