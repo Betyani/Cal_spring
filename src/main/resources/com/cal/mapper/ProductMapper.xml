@@ -67,7 +67,20 @@
 		VALUES (#{name}, #{price}, #{category}, #{imageUrl}, #{keyword})
 	</insert>
 
-	
+	<!-- 상품 1개 조회 -->
+    <select id="selectProductById" resultType="com.cal.dto.ProductDto">
+        SELECT * FROM products WHERE id = #{id}
+    </select>
+
+    <!-- 상품 수정 -->
+    <update id="updateProduct">
+        UPDATE products
+        SET name = #{name},
+            price = #{price},
+            category = #{category},
+            imageUrl = #{imageUrl}
+        WHERE id = #{id}
+    </update>
 	
 	
 </mapper>

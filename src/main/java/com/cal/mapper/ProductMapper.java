@@ -13,4 +13,8 @@ public interface ProductMapper {
     int getProductCount(ListDto criteria);
     void insertProduct(ProductDto product);
 	int countWithCriteria(ListDto criteria);
+	 // 상품 1개 조회 (수정할 상품 불러오기용)
+    public ProductDto selectProductById(int id);
+    // 상품 수정
+    public int updateProduct(ProductDto product);
 }
