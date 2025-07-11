@@ -27,7 +27,8 @@ import lombok.extern.log4j.Log4j;
 public class ProductController {
 
 	private ProductService service;
-
+	// 주석 테스트
+	
 	// 상품 등록(React에서 받아온 json 데이터를 dto에 저장)
 	@RequestMapping("/register")
 	public void productRegister(@RequestBody ProductDto dto) {
