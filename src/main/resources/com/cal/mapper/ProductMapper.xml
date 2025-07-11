@@ -63,7 +63,7 @@
 		</where>
 	</select>
 	<insert id="insertProduct" parameterType="com.cal.dto.ProductDto">
-		INSERT INTO products (name, price, category, image_url, keyword)
+		INSERT INTO products (name, price, category, imageUrl, keyword)
 		VALUES (#{name}, #{price}, #{category}, #{imageUrl}, #{keyword})
 	</insert>
 
