@@ -12,10 +12,11 @@
 		DELETE FROM products
 		WHERE id=#{id}
 	</delete>
-	
-	
+
+
 	<select id="findAll" resultType="com.cal.dto.ProductDto">
-		SELECT * FROM products ORDER BY id DESC
+		SELECT * FROM products ORDER BY
+		id DESC
 	</select>
 
 	<select id="findById" parameterType="int"
@@ -62,25 +63,29 @@
 			</if>
 		</where>
 	</select>
-	<insert id="insertProduct" parameterType="com.cal.dto.ProductDto">
-		INSERT INTO products (name, price, category, image_url, keyword)
-		VALUES (#{name}, #{price}, #{category}, #{imageUrl}, #{keyword})
+	<insert id="insertProduct"
+		parameterType="com.cal.dto.ProductDto">
+		INSERT INTO products (name, price, category, image_url,
+		keyword)
+		VALUES (#{name}, #{price}, #{category}, #{imageUrl},
+		#{keyword})
 	</insert>
 
 	<!-- 상품 1개 조회 -->
-    <select id="selectProductById" resultType="com.cal.dto.ProductDto">
-        SELECT * FROM products WHERE id = #{id}
-    </select>
+	<select id="selectProductById"
+		resultType="com.cal.dto.ProductDto">
+		SELECT * FROM products WHERE id = #{id}
+	</select>
 
-    <!-- 상품 수정 -->
-    <update id="updateProduct">
-        UPDATE products
-        SET name = #{name},
-            price = #{price},
-            category = #{category},
-            imageUrl = #{imageUrl}
-        WHERE id = #{id}
-    </update>
-	
-	
+	<!-- 상품 수정 -->
+	<update id="updateProduct">
+		UPDATE products
+		SET name = #{name},
+		price = #{price},
+		category = #{category},
+		imageUrl = #{imageUrl}
+		WHERE id = #{id}
+	</update>
+
+
 </mapper>
