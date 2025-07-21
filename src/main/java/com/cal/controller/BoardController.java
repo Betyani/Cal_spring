@@ -20,7 +20,7 @@ import lombok.extern.log4j.Log4j;
 
 @Log4j
 @RestController
-@RequiredArgsConstructor
+@RequiredArgsConstructor // @AllArgsConstructor
 @RequestMapping("/board")
 @CrossOrigin(origins = "http://localhost:3000")
 public class BoardController {
