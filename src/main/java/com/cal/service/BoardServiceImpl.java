@@ -41,4 +41,13 @@ public class BoardServiceImpl implements BoardService {
 	    
 	}
 	
+	 @Override
+	    public List<BoardDto> getBoardList1() {
+	        return mapper.selectAll(); 
+	    }
+
+	 @Override
+	    public void deleteBoard(int id) {
+	        mapper.delete(id);
+	    }
 }
