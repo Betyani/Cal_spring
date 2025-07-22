@@ -35,7 +35,16 @@
 		FROM board
 		ORDER BY id DESC
 	</select>
+	
+	<!-- 게시글 전체 조회 -->
+    <select id="selectAll" resultType="com.cal.dto.BoardDto">
+        SELECT * FROM board
+    </select>
 
+    <!-- 게시글 삭제 -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM board WHERE id = #{id}
+    </delete>
 
 
 </mapper>

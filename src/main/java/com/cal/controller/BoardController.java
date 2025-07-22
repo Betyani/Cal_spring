@@ -3,11 +3,13 @@ package com.cal.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cal.dto.BoardDto;
@@ -50,5 +52,18 @@ public class BoardController {
 		service.updateBoard(id, dto);
 		return ResponseEntity.ok("게시글이 성공적으로 수정되었습니다."); // ← 메시지 반환!
 	}
+	
+	@GetMapping("/list") //게시글 목록 조회
+    public List<BoardDto> GetBoardList() {
+    	List<BoardDto> list = service.getBoardList1();
+    	log.info(list);
+        return list;   
+	}
+	
+	// 게시글 삭제
+    @DeleteMapping("/delete")
+    public void deleteBoard(@RequestParam int id) {
+        service.deleteBoard(id);
+    }
 
 }
