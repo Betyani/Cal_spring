@@ -53,17 +53,10 @@ public class BoardController {
 		return ResponseEntity.ok("게시글이 성공적으로 수정되었습니다."); // ← 메시지 반환!
 	}
 	
-	@GetMapping("/list1") //게시글 목록 조회
-    public List<BoardDto> GetBoardList() {
-    	List<BoardDto> list = service.getBoardList1();
-    	log.info(list);
-        return list;   
-	}
-	
 	// 게시글 삭제
     @DeleteMapping("/delete")
     public void deleteBoard(@RequestParam int id) {
         service.deleteBoard(id);
     }
-
+    
 }

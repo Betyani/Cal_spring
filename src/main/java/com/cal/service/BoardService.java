@@ -13,7 +13,5 @@ public interface BoardService {
 
 	List<BoardDto> getBoardList();
 	
-	List<BoardDto> getBoardList1();
-	
 	void deleteBoard(int id);
 }
