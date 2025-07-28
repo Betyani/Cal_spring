@@ -11,7 +11,6 @@ public class ListDto {
     private int size = 8;                         //페이지 몇개까지 허용되는지 대강 보면 암
 
     public int getOffset() {
-        return (page - 1) * size;
-    
-	}
+        return Math.max((page - 1) * size, 0);
+    }
 }
