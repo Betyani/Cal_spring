@@ -77,7 +77,7 @@ public class ProductController {
 	}
 
 	// 1) 상품 조회 - 수정 화면에서 기존 데이터 불러올 때 사용
-    @GetMapping("/test/{id}")
+    @GetMapping("/check/{id}")
     public ResponseEntity<ProductDto> selectProduct(@PathVariable int id) {
         ProductDto product = service.selectProductById(id);
         log.info(id);
