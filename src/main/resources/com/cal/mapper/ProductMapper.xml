@@ -4,8 +4,8 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cal.mapper.ProductMapper">
 	<insert id="productRegister">
-		insert into products (name, price, category) values
-		(#{name}, #{price}, #{category})
+		insert into products (name, price, category, imageUrl) values
+		(#{name}, #{price}, #{category}, #{imageUrl})
 	</insert>
 
 	<delete id="productDelete">
