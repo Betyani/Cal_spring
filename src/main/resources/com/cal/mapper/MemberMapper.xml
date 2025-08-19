@@ -6,12 +6,54 @@
 <mapper namespace="com.cal.mapper.MemberMapper">
 
   <insert id="insertMember" parameterType="com.cal.dto.MemberDto">
-    INSERT INTO member (username, password, name, email)
-    VALUES (#{username}, #{password}, #{name}, #{email})
-  </insert>
+    INSERT INTO member (id, password, name, nickname, email)
+		VALUES (#{id}, #{password}, #{name}, #{nickname}, #{email})
+	</insert>
 
-  <select id="findByUsername" parameterType="String" resultType="com.cal.dto.MemberDto">
-    SELECT * FROM member WHERE username = #{username}
-  </select>
+	<select id="findById" parameterType="String"
+		resultType="com.cal.dto.MemberDto">
+		SELECT * FROM member WHERE id = #{id}
+	</select>
+	
+	<select id="findByNickname" parameterType="String" resultType="com.cal.dto.MemberDto">
+        SELECT * FROM member WHERE nickname = #{nickname}
+    </select>
+
+	<select id="findByEmail" parameterType="String" resultType="com.cal.dto.MemberDto">
+        SELECT * FROM member WHERE email = #{email}
+    </select>
+    
+    <!-- 로그인 회원수정 -->
+   <update id="updateMember" parameterType="com.cal.dto.MemberDto">
+	  UPDATE member
+	  SET
+	    password = #{password},
+	    nickname = #{nickname},
+	    email = #{email}
+	  WHERE id = #{id} 
+	</update>
+	
+	
+	
+	
+	<!-- 이름+이메일로 id 찾기 -->
+<select id="findIdByNameEmail" resultType="string">
+    SELECT id FROM member 
+    WHERE name = #{name} AND email = #{email}
+</select>
+
+<!-- 임시 비밀번호로 업데이트 -->
+<update id="updatePasswordById">
+  UPDATE member
+  SET password = #{password}
+  WHERE id = #{id}
+</update>
+
+
+
+
+
+
 
 </mapper>
+    

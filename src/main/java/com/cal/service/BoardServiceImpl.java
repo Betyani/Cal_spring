@@ -29,7 +29,9 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public BoardDto getBoardById(int id) {
+		log.info("🔍 게시글 요청 id: " + id);
 		return mapper.selectBoardById(id);
+		
 	}
 
 	@Override
