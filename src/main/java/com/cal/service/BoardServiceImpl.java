@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.cal.dto.BoardDto;
+import com.cal.dto.ListDto;
 import com.cal.mapper.BoardMapper;
 
 import lombok.AllArgsConstructor;
@@ -23,8 +24,13 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<BoardDto> getBoardList() {
-		return mapper.selectAllBoards();
+	public List<BoardDto> boardList(ListDto dto) {
+		List<BoardDto> content = mapper.boardList(dto);
+		return content;
+	}
+	@Override
+	public int getTotalCount() {
+		return mapper.getTotalCount();
 	}
 
 	@Override

@@ -3,13 +3,10 @@ package com.cal.dto;
 import lombok.Data;
 
 @Data
-public class ListDto {
-    private String category;
-    private String keyword;                       //검색밑에
-    private String sort; //                    //종류,찾기
-    private int page = 1;                        //페이징
-    private int size = 8;                         //페이지 몇개까지 허용되는지 대강 보면 암
-
+public class ListDto1 {
+	
+	//produtList 페이징 처리용
+	private int page;
 	private int startIndex;
 	private int pageSize = 8;
 	private int totalCount;
@@ -21,6 +18,8 @@ public class ListDto {
 	private boolean hasNext;
 	
 	//productList 검색 및 정렬용
+	private String category;
+	private String keyword;
 	private boolean desc = true;
 
 	//boardList 상품 연결용
@@ -47,10 +46,6 @@ public class ListDto {
 			this.keyword = keyword.trim();
 		}
 	}
-    
-    
-    
-    public int getOffset() {
-        return Math.max((page - 1) * size, 0);
-    }
+	
+	
 }

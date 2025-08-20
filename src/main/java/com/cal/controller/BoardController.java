@@ -1,6 +1,8 @@
 package com.cal.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cal.dto.BoardDto;
+import com.cal.dto.ListDto;
 import com.cal.service.BoardService;
 
 import lombok.AllArgsConstructor;
@@ -33,9 +36,23 @@ public class BoardController {
 	}
 
 	@GetMapping("/list")
-	public ResponseEntity<List<BoardDto>> getBoardList() {
-		List<BoardDto> boards = service.getBoardList();
-		return ResponseEntity.ok(boards);
+	public Map<String, Object> boardList(@RequestParam("productId") int productId,
+			@RequestParam(defaultValue = "1", value = "page") int page) {
+
+		ListDto dto = new ListDto();
+		dto.setProductId(productId);
+		int totalCount = service.getTotalCount();
+		dto.setTotalCount(totalCount);
+		dto.setTotalPage();
+		dto.setPage(page);
+
+		List<BoardDto> reviews = service.boardList(dto);
+		log.info("받아온 리뷰: " + reviews);
+		Map<String, Object> result = new HashMap<>();
+		result.put("reviews", reviews);
+		result.put("pageInfo", dto);
+
+		return result;
 	}
 
 	@GetMapping("/detail/{id}")

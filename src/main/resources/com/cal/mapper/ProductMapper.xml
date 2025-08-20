@@ -8,9 +8,9 @@
 		(#{name}, #{price}, #{category}, #{imageUrl})
 	</insert>
 
+	<!-- 상품 삭제 -->
 	<delete id="productDelete">
-		DELETE FROM products
-		WHERE id=#{id}
+		delete from products where id = #{id}
 	</delete>
 	
 	

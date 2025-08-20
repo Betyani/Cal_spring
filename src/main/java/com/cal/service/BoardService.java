@@ -3,6 +3,7 @@ package com.cal.service;
 import java.util.List;
 
 import com.cal.dto.BoardDto;
+import com.cal.dto.ListDto;
 
 public interface BoardService {
 	public void boardRegister(BoardDto dto);
@@ -11,7 +12,8 @@ public interface BoardService {
 
 	void updateBoard(int id, BoardDto dto);
 
-	List<BoardDto> getBoardList();
+	public List<BoardDto> boardList(ListDto dto);
+	public int getTotalCount();
 	
 	void deleteBoard(int id);
 }

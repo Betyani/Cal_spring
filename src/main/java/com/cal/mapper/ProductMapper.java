@@ -6,7 +6,7 @@ import com.cal.dto.ProductDto;
 
 public interface ProductMapper {
 	public void productRegister(ProductDto dto);
-	public int productDelete(int id); //void에서 int로 변경함
+	public void productDelete(int id);
 	List<ProductDto> findAll();
     ProductDto findById(int id);
     List<ProductDto> findWithCriteria(ListDto criteria);

@@ -10,36 +10,47 @@
 	</insert>
 
 	<insert id="insertBoard" parameterType="com.cal.dto.BoardDto">
-		INSERT INTO board (title, content, writer, createTime, productId)
-		VALUES (#{title}, #{content}, #{writer}), #{createTime}, #{productId})
+		INSERT INTO board (title,
+		content, writer, createTime, productId)
+		VALUES (#{title}, #{content},
+		#{writer}), #{createTime}, #{productId})
 	</insert>
 	<!-- 게시글 1개 조회 -->
 	<select id="selectBoardById" resultType="com.cal.dto.BoardDto">
-		SELECT * FROM board WHERE id = #{id}
+		SELECT * FROM board
+		WHERE id = #{id}
 	</select>
 
 
 	<!-- 게시글 수정 -->
 	<update id="updateBoard" parameterType="com.cal.dto.BoardDto">
 		UPDATE board
-		SET title = #{title},
+		SET title =
+		#{title},
 		content = #{content},
 		writer = #{writer},
-		productId = #{productId}
+		productId =
+		#{productId}
 		WHERE id = #{id}
 
 	</update>
 
-	<select id="selectAllBoards" resultType="com.cal.dto.BoardDto">
-		SELECT id, title, content, writer,createTime,productId
-		FROM board
-		ORDER BY id DESC
+	<!-- 페이징 처리 상품 조회 -->
+	<select id="boardList" resultType="com.cal.dto.BoardDto">
+		select * from board where
+		productId = #{productId} order by id desc limit #{startIndex},
+		#{pageSize}
 	</select>
-	
-    <!-- 게시글 삭제 -->
-    <delete id="delete" parameterType="int">
-        DELETE FROM board WHERE id = #{id}
-    </delete>
+	<!-- 전체 상품 개수 조회 -->
+	<select id="getTotalCount" resultType="int">
+		select count(*) from board
+	</select>
+
+
+	<!-- 게시글 삭제 -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM board WHERE id = #{id}
+	</delete>
 
 
 </mapper>
