@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import lombok.extern.log4j.Log4j;
 
@@ -32,7 +33,23 @@ public class ImageController {
 
     @PostMapping("/upload")
     public Map<String, String> upload(@RequestParam("file") MultipartFile file) {
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        
+    	long maxSize = 2L * 1024 * 1024;
+    	if (file.getSize() > maxSize) {
+    		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "파일 크기가 너무 큽니다");
+    	}
+    	
+    	//확장자 화이트리스트(jpg, jpeg, png, gif)
+        String originalName = java.util.Optional.ofNullable(file.getOriginalFilename()).orElse("");
+        String lower = originalName.toLowerCase();
+        int dot = lower.lastIndexOf('.');
+        String ext = (dot == -1) ? "" : lower.substring(dot + 1);  // 확장자만 추출
+        java.util.Set<String> allowed = java.util.Set.of("jpg", "jpeg", "png", "gif");
+        if (!allowed.contains(ext)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "파일은 .jpg, .jpeg, .png, .gif만 가능");
+        }
+    	
+    	String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
         
         // 저장 디렉토리 객체 생성
         File directory = new File(uploadDir);
