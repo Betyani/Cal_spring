@@ -41,7 +41,7 @@ public class BoardController {
 
 		ListDto dto = new ListDto();
 		dto.setProductId(productId);
-		int totalCount = service.getTotalCount();
+		int totalCount = service.getTotalCount(productId);
 		dto.setTotalCount(totalCount);
 		dto.setTotalPage();
 		dto.setPage(page);

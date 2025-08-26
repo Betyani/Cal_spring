@@ -13,6 +13,6 @@ public interface BoardMapper {
 	int updateBoard(BoardDto dto);
 	BoardDto selectBoardById(int id);
 	public List<BoardDto> boardList(ListDto dto);
-	public int getTotalCount();
+	public int getTotalCount(int productId);
     void delete(int id);// 게시글 삭제
 }

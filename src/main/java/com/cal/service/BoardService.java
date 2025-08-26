@@ -13,7 +13,7 @@ public interface BoardService {
 	void updateBoard(int id, BoardDto dto);
 
 	public List<BoardDto> boardList(ListDto dto);
-	public int getTotalCount();
+	public int getTotalCount(int productId);
 	
 	void deleteBoard(int id);
 }
