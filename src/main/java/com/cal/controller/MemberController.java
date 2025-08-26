@@ -39,10 +39,7 @@ public class MemberController { // 🔔 클래스 이름 오타도 수정 (Meber
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody MemberDto m,HttpSession session,
-	                               @RequestParam(value = "saveId", required = false) String saveId,
-	                               HttpServletResponse response) {
-	    log.info("==== 로그인 저장 체크: " + saveId);
+	public ResponseEntity<?> login(@RequestBody MemberDto m, HttpSession session) {
 	    log.info("==== 로그인 API 호출됨 ====");
 
 	    // 1) 서비스에서 로그인 검증 → 성공 시 "id"를 리턴하도록 수정되어 있어야 함
@@ -59,15 +56,6 @@ public class MemberController { // 🔔 클래스 이름 오타도 수정 (Meber
 
 	    // 3) 세션에 DTO 통째로 보관 (키 통일: LOGIN_USER)
 	    session.setAttribute("LOGIN_USER", dto);
-
-	    // 4) '아이디 저장' 체크 시 쿠키 저장 (옵션)
-	    if ("on".equals(saveId)) {
-	        Cookie c = new Cookie("cookieSavedId", dto.getId());
-	        c.setPath("/");
-	        c.setHttpOnly(true);
-	        c.setMaxAge(60 * 60 * 24 * 30);
-	        response.addCookie(c);
-	    }
 
 	    // 5) 프론트가 바로 쓸 수 있게 JSON으로 응답 (id / nickname / role)
 	    return ResponseEntity.ok(Map.of(
