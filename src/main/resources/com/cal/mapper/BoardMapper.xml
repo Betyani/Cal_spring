@@ -28,9 +28,7 @@
 		SET title =
 		#{title},
 		content = #{content},
-		writer = #{writer},
-		productId =
-		#{productId}
+		writer = #{writer}
 		WHERE id = #{id}
 
 	</update>

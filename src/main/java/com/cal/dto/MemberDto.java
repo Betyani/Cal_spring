@@ -9,4 +9,5 @@ public class MemberDto {
     private String name;      // 사용자 이름
     private String nickname;  // 닉네임
     private String email;     // 이메일
+    private String role;      // 관리자,유저
 }

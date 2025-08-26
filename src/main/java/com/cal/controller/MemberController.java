@@ -39,28 +39,44 @@ public class MemberController { // 🔔 클래스 이름 오타도 수정 (Meber
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody MemberDto m, HttpSession session,
-			@RequestParam(value = "saveId", required = false) String saveId, HttpServletResponse response) {
-		log.info("==== 로그인 저장 체크: " + saveId);
-		log.info("==== 로그인 API 호출됨 ====");
-	  
-	  
-		String username = service.login(m);
-		if (username != null) {
-			session.setAttribute("loggedInUser", username);
-			if ("on".equals(saveId)) {
-				Cookie c = new Cookie("cookieSavedId", m.getId());// 여기 로그인 쿠키 
-				c.setPath("/");
-				c.setHttpOnly(true);
-		        c.setMaxAge(60 * 60 * 24 * 30);
-				response.addCookie(c);
-			}
-			return ResponseEntity.ok("로그인 성공");
-		} else {
-			return ResponseEntity.status(401).body("로그인 실패");
-		}
-	}
+	public ResponseEntity<?> login(@RequestBody MemberDto m,HttpSession session,
+	                               @RequestParam(value = "saveId", required = false) String saveId,
+	                               HttpServletResponse response) {
+	    log.info("==== 로그인 저장 체크: " + saveId);
+	    log.info("==== 로그인 API 호출됨 ====");
 
+	    // 1) 서비스에서 로그인 검증 → 성공 시 "id"를 리턴하도록 수정되어 있어야 함
+	    String userId = service.login(m);
+	    if (userId == null) {
+	        return ResponseEntity.status(401).body(Map.of("message", "로그인 실패"));
+	    }
+
+	    // 2) id로 전체 사용자 DTO 재조회 (role 포함)
+	    MemberDto dto = service.findById(userId);
+	    if (dto == null) {
+	        return ResponseEntity.status(500).body(Map.of("message", "회원 조회 실패"));
+	    }
+
+	    // 3) 세션에 DTO 통째로 보관 (키 통일: LOGIN_USER)
+	    session.setAttribute("LOGIN_USER", dto);
+
+	    // 4) '아이디 저장' 체크 시 쿠키 저장 (옵션)
+	    if ("on".equals(saveId)) {
+	        Cookie c = new Cookie("cookieSavedId", dto.getId());
+	        c.setPath("/");
+	        c.setHttpOnly(true);
+	        c.setMaxAge(60 * 60 * 24 * 30);
+	        response.addCookie(c);
+	    }
+
+	    // 5) 프론트가 바로 쓸 수 있게 JSON으로 응답 (id / nickname / role)
+	    return ResponseEntity.ok(Map.of(
+	        "id", dto.getId(),
+	        "nickname", dto.getNickname(),
+	        "role", dto.getRole()   // USER | MASTER
+	    ));
+	}
+	
 	@PostMapping("/logout")
 	public ResponseEntity<String> logout(HttpSession session, HttpServletResponse response) {
 		session.invalidate();
@@ -74,20 +90,17 @@ public class MemberController { // 🔔 클래스 이름 오타도 수정 (Meber
 	}
 	
 	@GetMapping("/status")
-	public ResponseEntity<String> loginStatus(HttpSession session) {
-		String loggedInUser = (String) session.getAttribute("loggedInUser");
-		if (loggedInUser != null) {
-			return ResponseEntity
-					.ok()
-					.header("Content-Type", "text/plain; charset=UTF-8") // charset 지정!
-					.body("현재 로그인한 사용자: " + loggedInUser);
-		} else {
-			return ResponseEntity.status(401)
-					.header("Content-Type", "text/plain; charset=UTF-8")
-					.body("로그인하지 않음");
-		}
+	public ResponseEntity<?> loginStatus(HttpSession session) {
+	    MemberDto dto = (MemberDto) session.getAttribute("LOGIN_USER");
+	    if (dto == null) {
+	        return ResponseEntity.status(401).body(Map.of("message", "NOT_LOGGED_IN"));
+	    }
+	    return ResponseEntity.ok(Map.of(
+	        "id", dto.getId(),
+	        "nickname", dto.getNickname(),
+	        "role", dto.getRole() // USER | MASTER
+	    ));
 	}
-
 	@GetMapping("/check-id")
 	public ResponseEntity<String> checkId(@RequestParam String id) {
 		boolean exists = service.isIdTaken(id);
@@ -136,23 +149,19 @@ public class MemberController { // 🔔 클래스 이름 오타도 수정 (Meber
 	}
 
 	@PostMapping("/update")
-	public ResponseEntity<String> update(@RequestBody MemberDto dto, HttpSession session) {
+	public ResponseEntity<?> update(@RequestBody MemberDto dto, HttpSession session) {
 	    boolean result = service.updateMember(dto);
-	    if (result) {
-	    	 MemberDto updated = service.findById(dto.getId());
-	         if (updated != null) {
-	             session.setAttribute("loggedInUser", updated.getNickname());
-	         }
-	        return ResponseEntity
-	                .ok()
-	                .header("Content-Type", "text/plain; charset=UTF-8")
-	                .body("회원정보가 수정되었습니다");
-	    } else {
-	        return ResponseEntity
-	                .status(500)
-	                .header("Content-Type", "text/plain; charset=UTF-8")
-	                .body("회원정보 수정 실패");
+	    if (!result) {
+	        return ResponseEntity.status(500).body(Map.of("message", "회원정보 수정 실패"));
 	    }
+
+	    // 수정된 최신 사용자 정보로 세션 갱신
+	    MemberDto updated = service.findById(dto.getId());
+	    if (updated != null) {
+	        session.setAttribute("LOGIN_USER", updated);
+	    }
+
+	    return ResponseEntity.ok(Map.of("message", "회원정보가 수정되었습니다"));
 	}
 	
 	

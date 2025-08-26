@@ -13,6 +13,10 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void register(MemberDto member) {
+    	// role 누락 대비용임 기본 'USER'
+    	if (member.getRole() == null || member
+    			.getRole().isBlank()) {member.setRole("USER");
+        }
         mapper.insertMember(member);
     }
 
@@ -27,7 +31,7 @@ public class MemberServiceImpl implements MemberService {
             System.out.println("입력한 패스워드: " + member.getPassword());
         }
         if (dbMember != null && dbMember.getPassword().equals(member.getPassword())) {
-        	return dbMember.getNickname();
+        	return dbMember.getId();
         }
         return null;
     }
@@ -53,8 +57,9 @@ public class MemberServiceImpl implements MemberService {
 	    // 비밀번호 비워져 있으면 기존 값 유지
 	    if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
 	        MemberDto existing = mapper.findById(dto.getId());
-	        if (existing != null) {
-	            dto.setPassword(existing.getPassword());
+	    if (dto.getRole() == null || dto.getRole().isBlank()) {
+	        dto.setRole(existing.getRole()); // USER | MASTER
+	       
 	        }
 	    }
 	    return mapper.updateMember(dto) > 0;

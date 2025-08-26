@@ -6,8 +6,8 @@
 <mapper namespace="com.cal.mapper.MemberMapper">
 
   <insert id="insertMember" parameterType="com.cal.dto.MemberDto">
-    INSERT INTO member (id, password, name, nickname, email)
-		VALUES (#{id}, #{password}, #{name}, #{nickname}, #{email})
+    INSERT INTO member (id, password, name, nickname, email,role)
+		VALUES (#{id}, #{password}, #{name}, #{nickname}, #{email}, #{role})
 	</insert>
 
 	<select id="findById" parameterType="String"
@@ -29,7 +29,8 @@
 	  SET
 	    password = #{password},
 	    nickname = #{nickname},
-	    email = #{email}
+	    email = #{email},
+	    role = #{role}
 	  WHERE id = #{id} 
 	</update>
 	
