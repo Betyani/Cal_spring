@@ -29,8 +29,8 @@ public class BoardServiceImpl implements BoardService {
 		return content;
 	}
 	@Override
-	public int getTotalCount() {
-		return mapper.getTotalCount();
+	public int getTotalCount(int productId) {
+		return mapper.getTotalCount(productId);
 	}
 
 	@Override
