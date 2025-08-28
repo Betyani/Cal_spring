@@ -14,5 +14,5 @@ public interface MemberMapper {
                              @Param("email") String email);
 
     int updatePasswordById(@Param("id") String id,
-            @Param("password") String password);
+                           @Param("password") String password);
 }

@@ -28,7 +28,7 @@ import lombok.extern.log4j.Log4j;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true") 
 
-public class MemberController { // 🔔 클래스 이름 오타도 수정 (MeberController → MemberController)
+public class MemberController { //  클래스 이름 오타도 수정 (MeberController → MemberController)
 
 	private final MemberService service;
 
@@ -41,23 +41,22 @@ public class MemberController { // 🔔 클래스 이름 오타도 수정 (Meber
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody MemberDto m, HttpSession session) {
 	    log.info("==== 로그인 API 호출됨 ====");
-
-	    // 1) 서비스에서 로그인 검증 → 성공 시 "id"를 리턴하도록 수정되어 있어야 함
+	    
 	    String userId = service.login(m);
 	    if (userId == null) {
 	        return ResponseEntity.status(401).body(Map.of("message", "로그인 실패"));
 	    }
-
-	    // 2) id로 전체 사용자 DTO 재조회 (role 포함)
+	    
+	    //  id로 전체 사용자 DTO 재조회 (role 포함)
 	    MemberDto dto = service.findById(userId);
 	    if (dto == null) {
 	        return ResponseEntity.status(500).body(Map.of("message", "회원 조회 실패"));
 	    }
 
-	    // 3) 세션에 DTO 통째로 보관 (키 통일: LOGIN_USER)
+	    // 세션에 DTO 통째로 보관 (키 통일: LOGIN_USER)
 	    session.setAttribute("LOGIN_USER", dto);
 
-	    // 5) 프론트가 바로 쓸 수 있게 JSON으로 응답 (id / nickname / role)
+	    // 프론트가 바로 쓸 수 있게 JSON으로 응답 (id / nickname / role)
 	    return ResponseEntity.ok(Map.of(
 	        "id", dto.getId(),
 	        "nickname", dto.getNickname(),
@@ -65,16 +64,10 @@ public class MemberController { // 🔔 클래스 이름 오타도 수정 (Meber
 	    ));
 	}
 	
-	@PostMapping("/logout")
-	public ResponseEntity<String> logout(HttpSession session, HttpServletResponse response) {
-		session.invalidate();
-		 // 🔹 cookieSavedId 쿠키 삭제
-	    Cookie deleteCookie = new Cookie("cookieSavedId", null);
-	    deleteCookie.setPath("/");       // 반드시 동일한 path
-	    deleteCookie.setMaxAge(0);       // 0 → 즉시 삭제
-	    response.addCookie(deleteCookie);
-
-		return ResponseEntity.ok("로그아웃 성공");
+	 @PostMapping("/logout")
+	    public ResponseEntity<String> logout(HttpSession session) {
+	        session.invalidate();
+	        return ResponseEntity.ok("로그아웃 성공");
 	}
 	
 	@GetMapping("/status")
@@ -94,7 +87,8 @@ public class MemberController { // 🔔 클래스 이름 오타도 수정 (Meber
 		boolean exists = service.isIdTaken(id);
 
 		if (exists) {
-			return ResponseEntity.status(409).header("Content-Type", "text/plain; charset=UTF-8")
+			return ResponseEntity.status(409)
+					.header("Content-Type", "text/plain; charset=UTF-8")
 					.body("이미 사용 중인 아이디입니다.");
 		} else {
 			return ResponseEntity
@@ -138,7 +132,25 @@ public class MemberController { // 🔔 클래스 이름 오타도 수정 (Meber
 
 	@PostMapping("/update")
 	public ResponseEntity<?> update(@RequestBody MemberDto dto, HttpSession session) {
-	    boolean result = service.updateMember(dto);
+		  MemberDto login = (MemberDto) session.getAttribute("LOGIN_USER");
+	        
+		  if (login == null) return ResponseEntity.status(401)
+				  .body(Map.of("message", "로그인이 필요합니다."));
+
+	      boolean isOwner  = login.getId().equals(dto.getId());
+	      boolean isMaster = "MASTER".equals(login.getRole());
+	      if (!isOwner && !isMaster) return ResponseEntity.status(403)
+	    		  .body(Map.of("message","수정 권한이 없습니다."));
+
+	        // 👇 프론트가 role을 보내더라도 무시 (자기수정에선 금지)
+	        dto.setRole(null);
+
+	        // 👇 빈 문자열 비밀번호는 null로 정규화(동적 SQL에서 제외)
+	        if (dto.getPassword() != null && dto.getPassword().trim().isEmpty()) {
+	            dto.setPassword(null);
+	        }
+		
+		boolean result = service.updateMember(dto);
 	    if (!result) {
 	        return ResponseEntity.status(500).body(Map.of("message", "회원정보 수정 실패"));
 	    }
@@ -161,8 +173,7 @@ public class MemberController { // 🔔 클래스 이름 오타도 수정 (Meber
 	    if (member != null) {
 	        return ResponseEntity.ok(member);
 	    } else {
-	        return ResponseEntity.status(404)
-	        		.build(); // 찾을 수 없음
+	        return ResponseEntity.status(404).build(); 
 	    }
 	}
 	

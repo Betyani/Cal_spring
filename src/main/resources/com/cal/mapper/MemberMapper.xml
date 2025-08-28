@@ -5,55 +5,51 @@
 
 <mapper namespace="com.cal.mapper.MemberMapper">
 
-  <insert id="insertMember" parameterType="com.cal.dto.MemberDto">
-    INSERT INTO member (id, password, name, nickname, email,role)
-		VALUES (#{id}, #{password}, #{name}, #{nickname}, #{email}, #{role})
+	<insert id="insertMember" parameterType="com.cal.dto.MemberDto">
+		INSERT INTO member (id, password, name, nickname, email,role)
+		VALUES (#{id},#{password}, #{name}, #{nickname}, #{email}, #{role})
 	</insert>
 
-	<select id="findById" parameterType="String"
-		resultType="com.cal.dto.MemberDto">
+	<select id="findById" parameterType="String" resultType="com.cal.dto.MemberDto">
 		SELECT * FROM member WHERE id = #{id}
 	</select>
-	
+
 	<select id="findByNickname" parameterType="String" resultType="com.cal.dto.MemberDto">
-        SELECT * FROM member WHERE nickname = #{nickname}
-    </select>
+		SELECT * FROM member WHERE nickname = #{nickname}
+	</select>
 
 	<select id="findByEmail" parameterType="String" resultType="com.cal.dto.MemberDto">
-        SELECT * FROM member WHERE email = #{email}
-    </select>
-    
-    <!-- 로그인 회원수정 -->
-   <update id="updateMember" parameterType="com.cal.dto.MemberDto">
-	  UPDATE member
-	  SET
-	    password = #{password},
-	    nickname = #{nickname},
-	    email = #{email},
-	    role = #{role}
-	  WHERE id = #{id} 
+		SELECT * FROM member WHERE email = #{email}
+	</select>
+
+	<!-- 로그인 회원수정 -->
+	
+
+<update id="updateMember" parameterType="com.cal.dto.MemberDto">
+		UPDATE member
+		SET
+		password = #{password},
+		nickname = #{nickname},
+		email = #{email},
+		role = #{role}
+		WHERE id = #{id}
 	</update>
-	
-	
-	
-	
+
+
 	<!-- 이름+이메일로 id 찾기 -->
-<select id="findIdByNameEmail" resultType="string">
-    SELECT id FROM member 
-    WHERE name = #{name} AND email = #{email}
-</select>
+	<select id="findIdByNameEmail" resultType="string">
+		SELECT id FROM member
+		WHERE name = #{name} AND email = #{email}
+	</select>
 
-<!-- 임시 비밀번호로 업데이트 -->
-<update id="updatePasswordById">
-  UPDATE member
-  SET password = #{password}
-  WHERE id = #{id}
-</update>
+	
 
-
-
-
-
+	<!-- 임시 비밀번호로 업데이트 -->
+	<update id="updatePasswordById">
+		UPDATE member
+		SET password = #{password}
+		WHERE id = #{id}
+	</update>
 
 
 </mapper>
