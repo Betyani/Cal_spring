@@ -129,43 +129,62 @@ public class MemberController { //  클래스 이름 오타도 수정 (MeberCont
 					.body("사용 가능한 이메일입니다.");
 		}
 	}
-
+	
+          //회원 정보 수정 쪽
 	@PostMapping("/update")
 	public ResponseEntity<?> update(@RequestBody MemberDto dto, HttpSession session) {
-		  MemberDto login = (MemberDto) session.getAttribute("LOGIN_USER");
-	        
-		  if (login == null) return ResponseEntity.status(401)
-				  .body(Map.of("message", "로그인이 필요합니다."));
+	    MemberDto login = (MemberDto) session.getAttribute("LOGIN_USER");
+	    if (login == null) {
+	        return ResponseEntity.status(401).body(Map.of("message", "로그인이 필요합니다."));
+	    }
 
-	      boolean isOwner  = login.getId().equals(dto.getId());
-	      boolean isMaster = "MASTER".equals(login.getRole());
-	      if (!isOwner && !isMaster) return ResponseEntity.status(403)
-	    		  .body(Map.of("message","수정 권한이 없습니다."));
+	    // 본인만 수정되게 고정
+	    String userId = login.getId();
+	    dto.setId(userId);
 
-	        // 👇 프론트가 role을 보내더라도 무시 (자기수정에선 금지)
-	        dto.setRole(null);
+	    // 고정 UPDATE(전컬럼)이라, 빈 값은 기존 값으로 채워서 덮어쓰기 방지
+	    MemberDto existing = service.findById(userId);
+	    if (existing == null) {
+	        return ResponseEntity.status(404).body(Map.of("message", "존재하지 않는 회원입니다."));
+	    }
 
-	        // 👇 빈 문자열 비밀번호는 null로 정규화(동적 SQL에서 제외)
-	        if (dto.getPassword() != null && dto.getPassword().trim().isEmpty()) {
-	            dto.setPassword(null);
+	    // 비번 안 바꾸면 기존 비번 유지
+	    if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
+	        dto.setPassword(existing.getPassword());
+	    }
+	    // 닉네임/이메일도 혹시 빈 값이면 기존 유지 (프론트 실수 대비)
+	    if (dto.getNickname() == null || dto.getNickname().trim().isEmpty()) {
+	        dto.setNickname(existing.getNickname());
+	    }
+	    if (dto.getEmail() == null || dto.getEmail().trim().isEmpty()) {
+	        dto.setEmail(existing.getEmail());
+	    }
+
+	    // role은 자기수정에서 변경 불가 → 기존 유지
+	    dto.setRole(existing.getRole());
+
+	    try {
+	        boolean ok = service.updateMember(dto); // Mapper는 고정 UPDATE
+	        if (!ok) {
+	            return ResponseEntity.status(500).body(Map.of("message", "회원정보 수정 실패"));
 	        }
-		
-		boolean result = service.updateMember(dto);
-	    if (!result) {
-	        return ResponseEntity.status(500).body(Map.of("message", "회원정보 수정 실패"));
-	    }
 
-	    // 수정된 최신 사용자 정보로 세션 갱신
-	    MemberDto updated = service.findById(dto.getId());
-	    if (updated != null) {
-	        session.setAttribute("LOGIN_USER", updated);
-	    }
+	        // 세션 최신화 (화면에 바로 새 닉네임 반영되게)
+	        MemberDto updated = service.findById(userId);
+	        if (updated != null) {
+	            session.setAttribute("LOGIN_USER", updated);
+	        }
 
-	    return ResponseEntity.ok(Map.of("message", "회원정보가 수정되었습니다"));
+	        // 프론트가 작은 창(알럿) 띄우기 쉽도록 200 OK + 메시지
+	        return ResponseEntity.ok(Map.of("message", "회원 정보가 수정되었습니다."));
+	    } catch (org.springframework.dao.DataIntegrityViolationException e) {
+	        // UNIQUE 충돌(닉네임/이메일 중복 등)
+	        return ResponseEntity.status(409).body(Map.of("message", "이미 사용 중인 값이 있습니다."));
+	    } catch (Exception e) {
+	        return ResponseEntity.status(500).body(Map.of("message", "서버 오류"));
+	    }
 	}
 	
-	
-
 	@GetMapping("/find-by-id")
 	public ResponseEntity<MemberDto> findById(@RequestParam String id) {
 	    MemberDto member = service.findById(id);
