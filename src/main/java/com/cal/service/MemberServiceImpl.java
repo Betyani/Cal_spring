@@ -48,7 +48,6 @@ public class MemberServiceImpl implements MemberService {
 	
     //로그인   회원 수정 버튼쪽
 	public boolean updateMember(MemberDto dto) {
-		//SQL에 맡기는게 편할듯 해서 만듬
 	    return mapper.updateMember(dto) > 0;
 	}
 
