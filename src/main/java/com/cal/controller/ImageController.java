@@ -32,11 +32,13 @@ public class ImageController {
 	private final String uploadDir = "C:/projectImage/";
 
     @PostMapping("/upload")
-    public Map<String, String> upload(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Map<String, String>> upload(@RequestParam("file") MultipartFile file) {
         
     	long maxSize = 2L * 1024 * 1024;
     	if (file.getSize() > maxSize) {
-    		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "파일 크기가 너무 큽니다");
+    		return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("message", "파일 크기가 너무 큽니다"));
     	}
     	
     	//확장자 화이트리스트(jpg, jpeg, png, gif)
@@ -46,7 +48,9 @@ public class ImageController {
         String ext = (dot == -1) ? "" : lower.substring(dot + 1);  // 확장자만 추출
         java.util.Set<String> allowed = java.util.Set.of("jpg", "jpeg", "png", "gif");
         if (!allowed.contains(ext)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "파일은 .jpg, .jpeg, .png, .gif만 가능");
+        	return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("message", "파일은 .jpg, .jpeg, .png, .gif만 가능"));
         }
     	
     	String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
@@ -69,7 +73,7 @@ public class ImageController {
         Map<String, String> result = new HashMap<>();
         result.put("fileName", fileName);
         
-        return result;
+        return ResponseEntity.ok(result);
     }
     
  // HTTP 요청 중 /image/파일명 으로 들어온 요청을 처리하는 메서드
