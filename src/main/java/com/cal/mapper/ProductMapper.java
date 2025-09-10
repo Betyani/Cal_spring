@@ -1,5 +1,6 @@
 package com.cal.mapper;
 import java.util.List;
+import java.util.Map;
 
 import com.cal.dto.ListDto;
 import com.cal.dto.ProductDto;
@@ -17,4 +18,10 @@ public interface ProductMapper {
     public ProductDto selectProductById(int id);
     // 상품 수정
     public int updateProduct(ProductDto product);
+    
+    // ✅ 추가된 부분: 상품 추천(좋아요) 관련
+    int insertLike(Map<String, Object> params);     // 추천 기록 저장
+    int deleteLike(Map<String, Object> params);     // 추천 기록 삭제
+    int incrementLikeCount(int productId);          // products.like_count + 1
+    int decrementLikeCount(int productId);          // products.like_count - 1
 }

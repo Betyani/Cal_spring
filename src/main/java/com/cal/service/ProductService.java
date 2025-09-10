@@ -23,5 +23,12 @@ public interface ProductService {
 
     // 상품 수정
     public void updateProduct(int id, ProductDto product);
+    
+    
+    // 상품 추천(좋아요) 등록
+    boolean addLike(int productId, String userId);
+
+    // 상품 추천(좋아요) 취소
+    boolean removeLike(int productId, String userId);
 
 }

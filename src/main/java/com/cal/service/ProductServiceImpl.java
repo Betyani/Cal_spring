@@ -1,7 +1,10 @@
 package com.cal.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import com.cal.dto.ListDto;
@@ -27,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
 	public void productDelete(int id) {
 		mapper.productDelete(id);
 	}
-	
+
 	@Override
 	public ProductDto getProductById(int id) {
 		return mapper.findById(id);
@@ -49,20 +52,63 @@ public class ProductServiceImpl implements ProductService {
 		return null;
 	}
 
-	 @Override
-	   public ProductDto selectProductById(int id) {
-	       // 일단 DB 말고 하드코딩된 데이터로 연결 확인
-	       return mapper.selectProductById(id);
-	   }
-
-	    @Override
-	    public void updateProduct(int id, ProductDto dto) {
-	        dto.setId(id); // URL 경로의 id와 DTO id 동기화
-	        if (mapper.updateProduct(dto) == 0) {
-	            System.out.println("⚠️ 업데이트 실패: 상품 없음");
-	        }
-	    }
-
+	@Override
+	public ProductDto selectProductById(int id) {
+		// 일단 DB 말고 하드코딩된 데이터로 연결 확인
+		return mapper.selectProductById(id);
 	}
-	
-	
+
+	@Override
+	public void updateProduct(int id, ProductDto dto) {
+		dto.setId(id); // URL 경로의 id와 DTO id 동기화
+		if (mapper.updateProduct(dto) == 0) {
+			System.out.println("⚠️ 업데이트 실패: 상품 없음");
+		}
+	}
+
+	// ✅ 수정된 부분: 상품 추천(좋아요)
+	@Override
+	public boolean addLike(int productId, String userId) {
+		try {
+			log.info("[addLike] 실행됨: productId=" + productId + ", userId=" + userId);
+
+			// (1) Map으로 포장해서 Mapper에 전달
+			Map<String, Object> params = new HashMap<>();
+			params.put("productId", productId);
+			params.put("userId", userId);
+
+			int inserted = mapper.insertLike(params); // DB insert 실행
+			log.info("[addLike] insertLike 실행 결과: " + inserted);
+			if (inserted > 0) {
+				mapper.incrementLikeCount(productId); // products.like_count + 1
+				log.info("[addLike] incrementLikeCount 실행 결과: " + inserted);
+				return true;
+			}
+			return false;
+		} catch (DuplicateKeyException e) {
+			log.warn("이미 추천한 상품입니다. productId=" + productId + ", userId=" + userId);
+			return false;
+		}
+	}
+
+	// ✅ 수정된 부분: 상품 추천(좋아요) 취소
+	@Override
+	public boolean removeLike(int productId, String userId) {
+		log.info("[removeLike] 실행됨: productId=" + productId + ", userId=" + userId);
+
+		// (2) 여기서도 동일하게 Map으로 포장
+		Map<String, Object> params = new HashMap<>();
+		params.put("productId", productId);
+		params.put("userId", userId);
+
+		int deleted = mapper.deleteLike(params); // DB insert 실행
+		log.info("[removeLike] deleteLike 실행 결과: " + deleted);
+		if (deleted > 0) {
+			mapper.decrementLikeCount(productId); // Like_count - 1
+			log.info("[removeLike] decrementLikeCount 실행 결과: " + deleted);
+			return true;
+		}
+		return false;
+	}
+
+}
