@@ -87,12 +87,12 @@ public class MemberController { //  클래스 이름 오타도 수정 (MeberCont
 		if (exists) {
 			return ResponseEntity.status(409)
 					.header("Content-Type", "text/plain; charset=UTF-8")
-					.body("이미 사용 중인 아이디입니다.");
+					.body("これはすでに使用されているIDです。");
 		} else {
 			return ResponseEntity
 					.ok()
 					.header("Content-Type", "text/plain; charset=UTF-8")
-					.body("사용 가능한 아이디입니다.");
+					.body("これは利用可能なIDです。");
 		}
 	}
 
@@ -103,12 +103,12 @@ public class MemberController { //  클래스 이름 오타도 수정 (MeberCont
 		if (exists) {
 			return ResponseEntity.status(409)
 					.header("Content-Type", "text/plain; charset=UTF-8")
-					.body("이미 사용 중인 닉네임입니다.");
+					.body("すでに使われているニックネームです。");
 		} else {
 			return ResponseEntity
 					.ok()
 					.header("Content-Type", "text/plain; charset=UTF-8")
-					.body("사용 가능한 닉네임입니다.");
+					.body("使用可能なニックネームです。");
 		}
 	}
 
@@ -119,12 +119,12 @@ public class MemberController { //  클래스 이름 오타도 수정 (MeberCont
 		if (exists) {
 			return ResponseEntity.status(409)
 					.header("Content-Type", "text/plain; charset=UTF-8")
-					.body("이미 사용 중인 이메일입니다.");
+					.body("すでに使われているメールアドレスです。");
 		} else {
 			return ResponseEntity
 					.ok()
 					.header("Content-Type", "text/plain; charset=UTF-8")
-					.body("사용 가능한 이메일입니다.");
+					.body("利用可能なメールです。");
 		}
 	}
 	
@@ -204,12 +204,12 @@ public class MemberController { //  클래스 이름 오타도 수정 (MeberCont
 	        String id = service.findIdByNameAndEmail(name, email);
 	        if (id == null) {
 	            return ResponseEntity.status(404)
-	                    .body(Map.of("message", "일치하는 정보가 없습니다."));
+	                    .body(Map.of("message", "情報がありません。"));
 	        }
 	        
 	        return ResponseEntity.ok(Map.of(
 	                "id", id,              
-	                "message", "아이디를 찾았습니다."
+	                "message", "IDを見つけました。"
 	        ));
 	    }
 
@@ -223,11 +223,11 @@ public class MemberController { //  클래스 이름 오타도 수정 (MeberCont
 	    String tempPw = service.issueTempPassword(id, email);
 	    if (tempPw == null) {
 	        return ResponseEntity.status(404)
-	        		.body(Map.of("message", "일치하는 계정이 없습니다."));
+	        		.body(Map.of("message", "一致するアカウントがありません。"));
 	    }
 	    // 화면에 보여줄 임시 비밀번호를 그대로 리턴
 	    return ResponseEntity.ok(Map.of(
-	            "message", "임시 비밀번호가 발급되었습니다.",
+	            "message", "仮パスワードが発行されました。",
 	            "tempPassword", tempPw
 	    ));
 	}
