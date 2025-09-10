@@ -87,12 +87,12 @@ public class MemberController { //  클래스 이름 오타도 수정 (MeberCont
 		if (exists) {
 			return ResponseEntity.status(409)
 					.header("Content-Type", "text/plain; charset=UTF-8")
-					.body("これはすでに使用されているIDです。");
+					.body("すでに使用されているIDです。");
 		} else {
 			return ResponseEntity
 					.ok()
 					.header("Content-Type", "text/plain; charset=UTF-8")
-					.body("これは利用可能なIDです。");
+					.body("利用可能なIDです。");
 		}
 	}
 
