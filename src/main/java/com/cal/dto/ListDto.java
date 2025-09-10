@@ -11,7 +11,7 @@ public class ListDto {
     private int size = 8;                         //페이지 몇개까지 허용되는지 대강 보면 암
 
 	private int startIndex;
-	private int pageSize = 8;
+	private int pageSize = 5;
 	private int totalCount;
 	private int totalPage;
 	private int blockSize = 5;
