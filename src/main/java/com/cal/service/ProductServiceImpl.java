@@ -121,6 +121,7 @@ public class ProductServiceImpl implements ProductService {
         params.put("sort", criteria.getSort());
         params.put("page", criteria.getPage());
         params.put("size", criteria.getSize());
+        params.put("offset",criteria.getOffset());
         params.put("userId", userId); // 로그인 사용자 ID 추가
         return mapper.findAllWithLike(params); // Mapper XML id와 일치
     }

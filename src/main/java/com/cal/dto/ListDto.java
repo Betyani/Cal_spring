@@ -54,3 +54,5 @@ public class ListDto {
         return Math.max((page - 1) * size, 0);
     }
 }
+
+

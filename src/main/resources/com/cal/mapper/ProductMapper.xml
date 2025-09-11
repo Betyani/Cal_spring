@@ -43,7 +43,7 @@
 				ORDER BY id ASC
 			</when>
 			<when test="sort == 'recommend'">
-				ORDER BY id DESC
+				ORDER BY likeCount DESC, id DESC
 			</when>
 			<otherwise>
 				ORDER BY id DESC
@@ -92,7 +92,8 @@
 
 	<!-- 추천 기록 저장 -->
 	<insert id="insertLike" parameterType="map">
-		INSERT INTO product_likes (product_id, user_id)
+		INSERT INTO product_likes
+		(product_id, user_id)
 		VALUES (#{productId}, #{userId})
 	</insert>
 
@@ -116,37 +117,39 @@
 		WHERE id = #{productId} AND likeCount > 0
 	</update>
 
-    <!-- 추가된 부분: 로그인한 사용자의 liked 여부까지 가져오기 -->
-	<select id="findAllWithLike" resultType="com.cal.dto.ProductDto" parameterType="map">
+	<!-- 추가된 부분: 로그인한 사용자의 liked 여부까지 가져오기 -->
+	<select id="findAllWithLike" resultType="com.cal.dto.ProductDto"
+		parameterType="map">
 		SELECT p.*,
-		       CASE WHEN pl.user_id IS NOT NULL THEN TRUE ELSE FALSE END AS liked
-		FROM products p
+		CASE WHEN pl.user_id IS NOT NULL THEN TRUE ELSE FALSE END AS liked
+		FROM
+		products p
 		LEFT JOIN product_likes pl
-		  ON p.id = pl.product_id
-		 AND pl.user_id = #{userId}
-		 <where>
-        <!-- criteria 제거, Map에 담은 key와 일치시키기 -->
+		ON p.id = pl.product_id
+		AND pl.user_id = #{userId}
+		<where>
+			<!-- criteria 제거, Map에 담은 key와 일치시키기 -->
 			<if test="keyword != null and keyword != ''">
 				name LIKE CONCAT('%', #{keyword}, '%')
 			</if>
 			<if test="category != null and category != ''">
 				AND category = #{category}
 			</if>
-    </where>
-		ORDER BY p.id DESC
+		</where>
+		<choose>
+			<when test="sort == 'old'">
+				ORDER BY p.id ASC
+			</when>
+			<when test="sort == 'recommend'">
+				ORDER BY p.likeCount DESC, p.id DESC
+			</when>
+			<otherwise>
+				ORDER BY p.id DESC
+			</otherwise>
+		</choose>
+		<!-- 페이징 -->
+		LIMIT #{size} OFFSET #{offset}
 	</select>
-
-	<!-- 단일 상품 조회 시 liked 여부 포함 -->
-	<select id="findByIdWithLike" resultType="com.cal.dto.ProductDto" parameterType="map">
-		SELECT p.*,
-		       CASE WHEN pl.user_id IS NOT NULL THEN TRUE ELSE FALSE END AS liked
-		FROM products p
-		LEFT JOIN product_likes pl
-		  ON p.id = pl.product_id
-		 AND pl.user_id = #{userId}
-		WHERE p.id = #{productId}
-	</select>
-
 
 
 </mapper>
