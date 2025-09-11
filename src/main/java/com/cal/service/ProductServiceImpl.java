@@ -111,13 +111,18 @@ public class ProductServiceImpl implements ProductService {
 		return false;
 	}
 
-	// 로그인한 사용자 좋아요 여부 반영 상품 목록 조회
+	// 로그인한 사용자 좋아요 여부 반영 상품 목록 조회 +  keyword/category 필터 유지
     @Override
     public List<ProductDto> getProductsByCriteriaWithLike(ListDto criteria, String userId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("criteria", criteria);
-        params.put("userId", userId);
-        return mapper.findAllWithLike(params);  
+        // criteria 객체를 Map에 직접 넣지 않고 개별 필드로 분리
+        params.put("keyword", criteria.getKeyword()); // keyword 검색 유지
+        params.put("category", criteria.getCategory()); // category 필터 유지
+        params.put("sort", criteria.getSort());
+        params.put("page", criteria.getPage());
+        params.put("size", criteria.getSize());
+        params.put("userId", userId); // 로그인 사용자 ID 추가
+        return mapper.findAllWithLike(params); // Mapper XML id와 일치
     }
 
     // 로그인한 사용자 좋아요 여부 반영 상품 단건 조회

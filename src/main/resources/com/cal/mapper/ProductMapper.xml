@@ -124,6 +124,15 @@
 		LEFT JOIN product_likes pl
 		  ON p.id = pl.product_id
 		 AND pl.user_id = #{userId}
+		 <where>
+        <!-- criteria 제거, Map에 담은 key와 일치시키기 -->
+			<if test="keyword != null and keyword != ''">
+				name LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="category != null and category != ''">
+				AND category = #{category}
+			</if>
+    </where>
 		ORDER BY p.id DESC
 	</select>
 
