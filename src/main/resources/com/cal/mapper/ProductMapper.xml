@@ -4,7 +4,8 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cal.mapper.ProductMapper">
 	<insert id="productRegister">
-		insert into products (name, price, category, imageUrl) values
+		insert into products (name, price, category,
+		imageUrl) values
 		(#{name}, #{price}, #{category}, #{imageUrl})
 	</insert>
 
@@ -12,10 +13,11 @@
 	<delete id="productDelete">
 		delete from products where id = #{id}
 	</delete>
-	
-	
+
+
 	<select id="findAll" resultType="com.cal.dto.ProductDto">
-		SELECT * FROM products ORDER BY id DESC
+		SELECT * FROM products ORDER BY
+		id DESC
 	</select>
 
 	<select id="findById" parameterType="int"
@@ -62,25 +64,58 @@
 			</if>
 		</where>
 	</select>
-	<insert id="insertProduct" parameterType="com.cal.dto.ProductDto">
-		INSERT INTO products (name, price, category, imageUrl, keyword)
-		VALUES (#{name}, #{price}, #{category}, #{imageUrl}, #{keyword})
+	<insert id="insertProduct"
+		parameterType="com.cal.dto.ProductDto">
+		INSERT INTO products (name, price, category, imageUrl,
+		keyword)
+		VALUES (#{name}, #{price}, #{category}, #{imageUrl},
+		#{keyword})
 	</insert>
 
 	<!-- 상품 1개 조회 -->
-    <select id="selectProductById" resultType="com.cal.dto.ProductDto">
-        SELECT * FROM products WHERE id = #{id}
-    </select>
+	<select id="selectProductById"
+		resultType="com.cal.dto.ProductDto">
+		SELECT * FROM products WHERE id = #{id}
+	</select>
 
-    <!-- 상품 수정 -->
-    <update id="updateProduct">
-        UPDATE products
-        SET name = #{name},
-            price = #{price},
-            category = #{category},
-            imageUrl = #{imageUrl}
-        WHERE id = #{id}
-    </update>
-	
-	
+	<!-- 상품 수정 -->
+	<update id="updateProduct">
+		UPDATE products
+		SET name = #{name},
+		price = #{price},
+		category = #{category},
+		imageUrl = #{imageUrl}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 상품 추천 (좋아요) -->
+
+	<!-- 추천 기록 저장 -->
+	<insert id="insertLike" parameterType="map">
+		INSERT INTO product_likes (product_id, user_id)
+		VALUES (#{productId}, #{userId})
+	</insert>
+
+	<!-- 추천 기록 삭제 -->
+	<delete id="deleteLike" parameterType="map">
+		DELETE FROM product_likes
+		WHERE product_id = #{productId} AND user_id = #{userId}
+	</delete>
+
+	<!-- products.like_count 증가 -->
+	<update id="incrementLikeCount" parameterType="int">
+		UPDATE products
+		SET likeCount = likeCount + 1
+		WHERE id = #{productId}
+	</update>
+
+	<!-- products.like_count 감소 -->
+	<update id="decrementLikeCount" parameterType="int">
+		UPDATE products
+		SET likeCount = likeCount - 1
+		WHERE id = #{productId} AND likeCount > 0
+	</update>
+
+
+
 </mapper>

@@ -9,4 +9,5 @@ public class ProductDto {
 	private int price;
 	private String category;
 	private String imageUrl;
+	private int likeCount;
 }

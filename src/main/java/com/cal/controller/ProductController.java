@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -92,4 +93,32 @@ public class ProductController {
 		return ResponseEntity.ok().header("Content-Type", "text/plain; charset=UTF-8") // ???로 깨져보여서 추가
 				.body("상품이 성공적으로 수정되었습니다.");
 	}
+	
+	
+	// ✅ 상품 추천(좋아요) 추가
+	   @PostMapping("/{id}/like")
+	   public ResponseEntity<String> likeProduct(@PathVariable int id, @RequestParam String userId) {
+	       boolean success = service.addLike(id, userId);   // 서비스 호출
+	       if (success) {
+	           return ResponseEntity.ok("Liked");
+	       } else {
+	           return ResponseEntity.badRequest().body("Already liked");
+	       }
+	   }
+
+	   // ✅ 상품 추천(좋아요) 취소
+	   @DeleteMapping("/{id}/like")
+	   public ResponseEntity<String> unlikeProduct(@PathVariable int id, @RequestParam String userId) {
+	       boolean success = service.removeLike(id, userId);  // 서비스 호출
+	       if (success) {
+	           return ResponseEntity.ok("Unliked");
+	       } else {
+	           return ResponseEntity.badRequest().body("Not liked yet");
+	       }
+	   }
+	
+	
+	
+	
+	
 }
