@@ -116,6 +116,28 @@
 		WHERE id = #{productId} AND likeCount > 0
 	</update>
 
+    <!-- 추가된 부분: 로그인한 사용자의 liked 여부까지 가져오기 -->
+	<select id="findAllWithLike" resultType="com.cal.dto.ProductDto" parameterType="map">
+		SELECT p.*,
+		       CASE WHEN pl.user_id IS NOT NULL THEN TRUE ELSE FALSE END AS liked
+		FROM products p
+		LEFT JOIN product_likes pl
+		  ON p.id = pl.product_id
+		 AND pl.user_id = #{userId}
+		ORDER BY p.id DESC
+	</select>
+
+	<!-- 단일 상품 조회 시 liked 여부 포함 -->
+	<select id="findByIdWithLike" resultType="com.cal.dto.ProductDto" parameterType="map">
+		SELECT p.*,
+		       CASE WHEN pl.user_id IS NOT NULL THEN TRUE ELSE FALSE END AS liked
+		FROM products p
+		LEFT JOIN product_likes pl
+		  ON p.id = pl.product_id
+		 AND pl.user_id = #{userId}
+		WHERE p.id = #{productId}
+	</select>
+
 
 
 </mapper>
