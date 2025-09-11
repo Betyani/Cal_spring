@@ -24,4 +24,8 @@ public interface ProductMapper {
     int deleteLike(Map<String, Object> params);     // 추천 기록 삭제
     int incrementLikeCount(int productId);          // products.like_count + 1
     int decrementLikeCount(int productId);          // products.like_count - 1
+    // 로그인 사용자 좋아요 여부 포함 목록 조회
+    List<ProductDto> findAllWithLike(Map<String, Object> params); 
+    // 로그인 사용자 좋아요 여부 포함 단건 조회
+    ProductDto findByIdWithLike(Map<String, Object> params);
 }
