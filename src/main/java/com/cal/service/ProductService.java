@@ -30,5 +30,11 @@ public interface ProductService {
 
     // 상품 추천(좋아요) 취소
     boolean removeLike(int productId, String userId);
+    
+    // 로그인한 사용자의 좋아요 여부 반영해서 상품 목록 조회
+    List<ProductDto> getProductsByCriteriaWithLike(ListDto criteria, String userId);
+
+    // 로그인한 사용자의 좋아요 여부 반영해서 상품 단건 조회
+    ProductDto getProductByIdWithLike(int productId, String userId);
 
 }

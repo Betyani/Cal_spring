@@ -47,15 +47,19 @@ public class ProductController {
 
 	// 내가 정한 상품 상세히 조회가능
 	@GetMapping("/detail/{id}")
-	public ProductDto getProduct(@PathVariable int id) {
-		return service.getProductById(id);
-	}
+	public ProductDto getProduct(@PathVariable int id,
+			@RequestParam(required = false) String userId) {
+        return service.getProductByIdWithLike(id, userId);
+    }
+	
+	
 
 	// 상품 목록 조회 및 검색
 	@GetMapping("/list")
 	public Map<String, Object> searchProducts(@RequestParam(required = false) String keyword,
 			@RequestParam(required = false) String category, @RequestParam(defaultValue = "new") String sort,
-			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "8") int size) {
+			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "8") int size, 
+			@RequestParam(required = false)String userId) {
 
 		ListDto criteria = new ListDto();
 		criteria.setKeyword(keyword);
@@ -64,7 +68,7 @@ public class ProductController {
 		criteria.setPage(page);
 		criteria.setSize(size);
 
-		List<ProductDto> products = service.getProductsByCriteria(criteria);
+		List<ProductDto> products = service.getProductsByCriteriaWithLike(criteria, userId);
 		int total = service.getProductCount(criteria);
 
 		Map<String, Object> result = new HashMap<>();
