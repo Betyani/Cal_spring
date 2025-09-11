@@ -87,7 +87,7 @@ public class MemberController { //  클래스 이름 오타도 수정 (MeberCont
 		if (exists) {
 			return ResponseEntity.status(409)
 					.header("Content-Type", "text/plain; charset=UTF-8")
-					.body("すでに使用されているIDです。");
+					.body("使用されているIDです。");
 		} else {
 			return ResponseEntity
 					.ok()
@@ -103,7 +103,7 @@ public class MemberController { //  클래스 이름 오타도 수정 (MeberCont
 		if (exists) {
 			return ResponseEntity.status(409)
 					.header("Content-Type", "text/plain; charset=UTF-8")
-					.body("すでに使われているニックネームです。");
+					.body("使われているニックネームです。");
 		} else {
 			return ResponseEntity
 					.ok()
@@ -133,7 +133,7 @@ public class MemberController { //  클래스 이름 오타도 수정 (MeberCont
 	public ResponseEntity<?> update(@RequestBody MemberDto dto, HttpSession session) {
 	    MemberDto login = (MemberDto) session.getAttribute("LOGIN_USER");
 	    if (login == null) {
-	        return ResponseEntity.status(401).body(Map.of("message", "로그인이 필요합니다."));
+	        return ResponseEntity.status(401).body(Map.of("message", "."));
 	    }
 
 	    // 본인만 수정되게 고정
