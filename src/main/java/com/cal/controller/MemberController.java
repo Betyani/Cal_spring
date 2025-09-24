@@ -174,9 +174,9 @@ public class MemberController { //  클래스 이름 오타도 수정 (MeberCont
 	        }
 
 	        // 프론트가 작은 창(알럿) 띄우기 쉽도록 200 OK + 메시지
-	        return ResponseEntity.ok(Map.of("message", "회원 정보가 수정되었습니다."));
+	        return ResponseEntity.ok(Map.of("message", "会員情報が修正しました。"));
 	    } catch (org.springframework.dao.DataIntegrityViolationException e) {
-	        // UNIQUE 충돌(닉네임/이메일 중복 등)
+	        // UNIQUE 충돌(닉네임/이메일 중복 등)이건 내가 북복을 걸어서 사용 안함 
 	        return ResponseEntity.status(409).body(Map.of("message", "이미 사용 중인 값이 있습니다."));
 	    } catch (Exception e) {
 	        return ResponseEntity.status(500).body(Map.of("message", "서버 오류"));
